@@ -1,37 +1,34 @@
  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper"> 
 <style>
-  .job-card .card {
+  #dash-table {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+  }
+  #dash-table thead th {
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+  }
+  #dash-table tbody tr {
+    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     transition: transform 0.2s;
   }
-  .job-card .card:hover {
+  #dash-table tbody tr:hover {
     transform: translateY(-5px);
   }
-  .job-card .card-title {
-    font-weight: bold;
+  #dash-table tbody td {
+    padding: 20px;
+    vertical-align: middle;
   }
-  .job-card .card-subtitle {
-    color: #6c757d;
+  #dash-table tbody td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
-  .job-card .card-text {
-    margin-bottom: 1rem;
-  }
-  .job-card .badge {
-    font-size: 0.9rem;
-    padding: 0.5em 0.7em;
-  }
-  #jobDetailsModal .modal-header {
-    background-color: #007bff;
-    color: white;
-  }
-  #jobDetailsModal .modal-title {
-    font-weight: bold;
-  }
-  #jobDetailsModal .modal-body h3 {
-    margin-bottom: 1.5rem;
-    font-weight: bold;
+  #dash-table tbody td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
   }
 </style>
     <!-- Main content -->
@@ -50,36 +47,40 @@
               <div class="form-group">
                 <input type="text" id="searchInput" class="form-control" placeholder="Search for job title, company, or location...">
               </div>
-              <div class="row" id="job-cards">
-                <?php
-                  $sql="SELECT * FROM `tblcompany` c,`tbljobregistration` r, `tbljob` j WHERE c.`COMPANYID`=r.`COMPANYID` AND r.`JOBID`=j.`JOBID` and r.`APPLICANTID` = {$_SESSION['APPLICANTID']}";
-                  $mydb->setQuery($sql);
-                  $cur = $mydb->loadResultList();
-                  foreach ($cur as $result) {
-                ?>
-                <div class="col-md-6 job-card"
-                  data-title="<?php echo $result->OCCUPATIONTITLE; ?>"
-                  data-company="<?php echo $result->COMPANYNAME; ?>"
-                  data-location="<?php echo $result->COMPANYADDRESS; ?>"
-                  data-status="<?php echo $result->REMARKS; ?>"
-                  data-req-employees="<?php echo $result->REQ_NO_EMPLOYEES; ?>"
-                  data-salary="<?php echo number_format($result->SALARIES, 2); ?>"
-                  data-duration="<?php echo $result->DURATION_EMPLOYEMENT; ?>"
-                  data-sex="<?php echo $result->PREFEREDSEX; ?>"
-                  data-sector="<?php echo $result->SECTOR_VACANCY; ?>"
-                  data-description="<?php echo htmlspecialchars($result->JOBDESCRIPTION); ?>"
-                  data-experience="<?php echo htmlspecialchars($result->QUALIFICATION_WORKEXPERIENCE); ?>"
-                  data-employer="<?php echo $result->COMPANYNAME; ?>"
-                  data-employer-address="<?php echo $result->COMPANYADDRESS; ?>"
-                >
-                  <div class="card mb-4">
-                    <div class="card-body">
-                      <h5 class="card-title"><?php echo $result->OCCUPATIONTITLE; ?></h5>
-                      <h6 class="card-subtitle mb-2 text-muted"><?php echo $result->COMPANYNAME; ?></h6>
-                      <p class="card-text">
-                        <strong>Location:</strong> <?php echo $result->COMPANYADDRESS; ?><br>
-                        <strong>Status:</strong>
-                        <?php
+              <div class="table-responsive mailbox-messages">
+                <table id="dash-table" class="table table-hover table-striped">
+                  <thead>
+                    <tr>
+                      <th>Job Title</th>
+                      <th>Company</th>
+                      <th>Location</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                      $sql="SELECT * FROM `tblcompany` c,`tbljobregistration` r, `tbljob` j WHERE c.`COMPANYID`=r.`COMPANYID` AND r.`JOBID`=j.`JOBID` and r.`APPLICANTID` = {$_SESSION['APPLICANTID']}";
+                      $mydb->setQuery($sql);
+                      $cur = $mydb->loadResultList();
+                      foreach ($cur as $result) {
+                        # code...
+                          echo '<tr data-title="' . $result->OCCUPATIONTITLE . '"
+                                    data-company="' . $result->COMPANYNAME . '"
+                                    data-location="' . $result->COMPANYADDRESS . '"
+                                    data-status="' . $result->REMARKS . '"
+                                    data-req-employees="' . $result->REQ_NO_EMPLOYEES . '"
+                                    data-salary="' . number_format($result->SALARIES, 2) . '"
+                                    data-duration="' . $result->DURATION_EMPLOYEMENT . '"
+                                    data-sex="' . $result->PREFEREDSEX . '"
+                                    data-sector="' . $result->SECTOR_VACANCY . '"
+                                    data-description="' . htmlspecialchars($result->JOBDESCRIPTION) . '"
+                                    data-experience="' . htmlspecialchars($result->QUALIFICATION_WORKEXPERIENCE) . '"
+                                    data-employer="' . $result->COMPANYNAME . '"
+                                    data-employer-address="' . $result->COMPANYADDRESS . '">';
+                          echo '<td class="mailbox-star"><a href="#" class="view-details" data-toggle="modal" data-target="#jobDetailsModal"><i class="fa fa-pencil-o text-yellow"></i> '.$result->OCCUPATIONTITLE.'</a></td>';
+                          echo '<td class="mailbox-attachment">'.$result->COMPANYNAME.'</td>';
+                          echo '<td class="mailbox-attachment">'.$result->COMPANYADDRESS.'</td>';
+
                           $status = $result->REMARKS;
                           $badge_class = 'badge-info'; // Default color
                           if ($status == 'Pending') {
@@ -89,14 +90,15 @@
                           } elseif ($status == 'Rejected') {
                             $badge_class = 'badge-danger';
                           }
-                        ?>
-                        <span class="badge <?php echo $badge_class; ?>"><?php echo $status; ?></span>
-                      </p>
-                      <a href="#" class="card-link view-details" data-toggle="modal" data-target="#jobDetailsModal">View Details</a>
-                    </div>
-                  </div>
-                </div>
-                <?php } ?>
+                          echo '<td><span class="badge ' . $badge_class . '">' . $status . '</span></td>';
+
+                          echo '</tr>';
+                      }
+                    ?>
+
+                  </tbody>
+                </table>
+                <!-- /.table -->
               </div>
               <!-- /.mail-box-messages -->
             </div> 
@@ -112,7 +114,6 @@
     </section>
     <!-- /.content -->
   </div>
-   
 <!-- Modal -->
 <div class="modal fade" id="jobDetailsModal" tabindex="-1" role="dialog" aria-labelledby="jobDetailsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -136,24 +137,19 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const searchInput = document.getElementById('searchInput');
-  const jobCardsContainer = document.getElementById('job-cards');
-  const jobCards = jobCardsContainer.getElementsByClassName('job-card');
+  const tableRows = document.querySelectorAll('#dash-table tbody tr');
 
   searchInput.addEventListener('keyup', function() {
     const filter = searchInput.value.toLowerCase();
 
-    for (let i = 0; i < jobCards.length; i++) {
-      const card = jobCards[i];
-      const title = card.dataset.title.toLowerCase();
-      const company = card.dataset.company.toLowerCase();
-      const locationText = card.dataset.location.toLowerCase();
-
-      if (title.includes(filter) || company.includes(filter) || locationText.includes(filter)) {
-        card.style.display = '';
+    tableRows.forEach(function(row) {
+      const text = row.textContent.toLowerCase();
+      if (text.includes(filter)) {
+        row.style.display = '';
       } else {
-        card.style.display = 'none';
+        row.style.display = 'none';
       }
-    }
+    });
   });
 
   const viewDetailsLinks = document.getElementsByClassName('view-details');
@@ -164,21 +160,21 @@ document.addEventListener('DOMContentLoaded', function() {
     viewDetailsLinks[i].addEventListener('click', function(event) {
       event.preventDefault();
 
-      const card = this.closest('.job-card');
+      const row = this.closest('tr');
 
-      const title = card.dataset.title;
-      const company = card.dataset.company;
-      const location = card.dataset.location;
-      const status = card.dataset.status;
-      const reqEmployees = card.dataset.reqEmployees;
-      const salary = card.dataset.salary;
-      const duration = card.dataset.duration;
-      const sex = card.dataset.sex;
-      const sector = card.dataset.sector;
-      const description = card.dataset.description;
-      const experience = card.dataset.experience;
-      const employer = card.dataset.employer;
-      const employerAddress = card.dataset.employerAddress;
+      const title = row.dataset.title;
+      const company = row.dataset.company;
+      const location = row.dataset.location;
+      const status = row.dataset.status;
+      const reqEmployees = row.dataset.reqEmployees;
+      const salary = row.dataset.salary;
+      const duration = row.dataset.duration;
+      const sex = row.dataset.sex;
+      const sector = row.dataset.sector;
+      const description = row.dataset.description;
+      const experience = row.dataset.experience;
+      const employer = row.dataset.employer;
+      const employerAddress = row.dataset.employerAddress;
 
       modalTitle.textContent = title;
 
