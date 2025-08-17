@@ -57,7 +57,7 @@
   justify-content: center;
 }
 </style>
-
+<script src="<?php echo web_root; ?>plugins/ckeditor/ckeditor.js"></script>
 </head>
 <body>
 <div id="wrapper" class="home-page">
