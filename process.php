@@ -88,6 +88,7 @@ function doInsert($jobid=0,$fileid=0) {
 			$applicant->CONTACTNO = $_POST['phone_no'];
 			$applicant->EMAILADDRESS = $_POST['emailAdress'];
 			$applicant->DEGREE = $_POST['educationLevel'];
+			$applicant->COURSESTUDIED = $_POST['courseOfStudy'];
 			$applicant->BIRTHDATE = $birthdate;
 			$applicant->NATIONALITY = $_POST['nationality'];
 			$applicant->LOCATION = $_POST['location'];
@@ -167,7 +168,7 @@ function doRegister(){
 
 			$autonum = New Autonumber();
 			$auto = $autonum->set_autonumber('APPLICANT');
-			 
+			 	
 			$applicant =New Applicants();
 			$applicant->APPLICANTID = date('Y').$auto->AUTO;
 			$applicant->FNAME = $_POST['fName'];
@@ -177,6 +178,7 @@ function doRegister(){
 			$applicant->CONTACTNO = $_POST['phone_no'];
 			$applicant->EMAILADDRESS = $_POST['emailAdress'];
 			$applicant->EDUCATIONLEVEL = $_POST['educationLevel'];
+			$applicant->COURSESTUDIED = $_POST['courseOfStudy'];
 			$applicant->BIRTHDATE = $birthdate;
 			$applicant->NATIONALITY = $_POST['nationality'];
 			$applicant->LOCATION = $_POST['location'];

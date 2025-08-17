@@ -193,11 +193,11 @@
     <div class="row">
       <div class="col-md-4 col-sm-4">
         <div class="widget">
-          <h5 class="widgetheading">Our Contact</h5>
+          <h5 class="widgetheading">Our Contacts</h5>
           <address>
           <strong>Our Company</strong><br>
           Kenyatta Avenue, Highway Towers<br>
-           Nkuru Kenya.</address>
+           Nakuru Kenya.</address>
           <p>
             <i class="icon-phone"></i> +254 728-065-590 <br>
             <i class="icon-envelope-alt"></i>carrerkenya@info.com
@@ -206,7 +206,7 @@
       </div>
       <div class="col-md-4 col-sm-4">
         <div class="widget">
-          <h5 class="widgetheading">Quick Links</h5>
+          <h5 class="widgetheading">Quick Job Links</h5>
           <ul class="link-list">
             <li><a href="<?php echo web_root; ?>index.php">Home</a></li>
             <li><a href="<?php echo web_root; ?>index.php?q=company">Company</a></li>
